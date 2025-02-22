@@ -11,11 +11,15 @@
 *  仓库中所有的图像处理方法都需要配置ip核
 *  这里只给出需要手动修改的配置，其他配置保持默认即可
 *  打开ROM ip核的配置，在Basic中将存储类型改为单口ROM，如下图所示：
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/rom_basic.png)
 *  在Port A Options中，修改位宽和深度，位宽应等于传入图像的像素点位宽，深度应大于等于传入图像的像素点个数，取消勾选输出缓存，如下图所示：
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/rom_port.png)
 *  在Other Options中，勾选从文件中加载，并点击浏览，将.coe文件的路径添加进去，如下图所示：
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/rom_other.png)
 
 ## FIFO ip核配置
 * average、corrode、dilate、gaussian3、gaussian5，middle、sobel需要配置该ip核
 * 这里只给出需要手动修改的配置，其他配置保持默认即可
 * 在Native Ports中，读模式选择First Word Fall Through，修改写位宽和写深度，写位宽应等于传入图像的像素点位数，写深度应大于等于传入图像的宽度，最后复位模式选择异步复位，如下图所示：
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/fifo_native.png)
   
