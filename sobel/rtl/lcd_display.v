@@ -34,8 +34,6 @@ wire  [WIDTH-1:0]  	rom_rd_data ;	//ROM数据
 wire  [WIDTH-1:0] 	buffer_dout1;
 wire  [WIDTH-1:0]  	buffer_dout2;
 wire  [WIDTH-1:0]  	buffer_dout3;
-wire  [WIDTH-1:0] 	buffer_dout4;
-wire  [WIDTH-1:0]  	buffer_dout5;
 wire		 		rst_fifo;
 wire				rd_en_all;			
 wire		  		fifo_rst_busy;
@@ -47,9 +45,9 @@ wire  [WIDTH-1:0]  	matrix_dout;
 assign  rom_rd_en = 1'd1;                  //读使能拉高，即一直读ROM数据
 assign 	rom_addr = ((pixel_xpos >= PIC_X_START) && (pixel_xpos < PIC_X_START + PIC_WIDTH) 
 					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT)) ? rom_addr_pic:rom_addr_buffer;
-assign	rd_en_all = ((pixel_xpos >= PIC_X_START - 3'd7 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd7 + PIC_X_DIVIDE) 
-					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT - 3'd4)) ? 1'b1:1'b0; 	
-assign	rst_fifo = 	(pixel_ypos == PIC_Y_START + PIC_HEIGHT - 3'd4 && pixel_xpos == PIC_X_START + PIC_WIDTH + PIC_X_DIVIDE - 3'd4) ? 1'b0:1'b1;			
+assign	rd_en_all = ((pixel_xpos >= PIC_X_START - 3'd5 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd5 + PIC_X_DIVIDE) 
+					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT - 2'd2)) ? 1'b1:1'b0; 	
+assign	rst_fifo = 	(pixel_ypos == PIC_Y_START + PIC_HEIGHT - 2'd2 && pixel_xpos == PIC_X_START + PIC_WIDTH + PIC_X_DIVIDE - 2'd2) ? 1'b0:1'b1;				
 
 //根据当前像素点坐标指定当前像素点颜色数据
 always @(posedge lcd_pclk or negedge rst_n) 
@@ -61,8 +59,8 @@ begin
 			if((pixel_xpos >= PIC_X_START) && (pixel_xpos < PIC_X_START + PIC_WIDTH) 
 				&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT))
 				pixel_data <= rom_rd_data;  //显示图片
-			else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd4)) 
-				&& (pixel_xpos >= PIC_X_START + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + (PIC_WIDTH - 3'd4) + PIC_X_DIVIDE)) 
+			else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 2'd2)) 
+				&& (pixel_xpos >= PIC_X_START + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + (PIC_WIDTH - 2'd2) + PIC_X_DIVIDE)) 
 				pixel_data <= matrix_dout;
 			else
 				pixel_data <= WHITE;    
@@ -105,8 +103,8 @@ begin
         rom_addr_buffer <= 16'd0;
 	else if(pixel_ypos <= PIC_Y_START && cnt_buffer < PRE_READ_NUM && !fifo_rst_busy)
 		rom_addr_buffer <= rom_addr_buffer + 1'd1;
-	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd5)) 
-			&& (pixel_xpos >= PIC_X_START - 4'd8 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd8 + PIC_X_DIVIDE)) 
+	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 2'd3)) 
+			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd6 + PIC_X_DIVIDE)) 
         rom_addr_buffer <= rom_addr_buffer + 1'd1;
     else if(!rst_fifo)
         rom_addr_buffer <= 16'd0;
@@ -121,8 +119,8 @@ begin
 		buffer_valid_in <= 1'd0;
 	else if(pixel_ypos <= PIC_Y_START && cnt_buffer < PRE_READ_NUM && !fifo_rst_busy)
 		buffer_valid_in <= 1'd1;
-	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd5)) 
-			&& (pixel_xpos >= PIC_X_START - 4'd8 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd8 + PIC_X_DIVIDE)) 
+	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 2'd3)) 
+			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd6 + PIC_X_DIVIDE)) 
 		buffer_valid_in <= 1'd1;
 	else
 		buffer_valid_in <= 1'd0;
@@ -133,8 +131,8 @@ always @(posedge lcd_pclk or negedge rst_n)
 begin
     if(!rst_n)
 		matrix_valid_in <= 1'd0;
-	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd4)) 
-			&& (pixel_xpos >= PIC_X_START - 4'd8 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd8 + PIC_X_DIVIDE)) 
+	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 2'd2)) 
+			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd6 + PIC_X_DIVIDE)) 
 		matrix_valid_in <= 1'd1;
 	else
 		matrix_valid_in <= 1'd0;
@@ -159,15 +157,13 @@ line_buffer u_line_buffer
 	.dout1          (buffer_dout1		),
 	.dout2          (buffer_dout2		),
 	.dout3          (buffer_dout3		),
-	.dout4          (buffer_dout4		),
-	.dout5          (buffer_dout5		),
 	.rd_en_all		(rd_en_all			),
 	.fifo_rst_busy	(fifo_rst_busy		),
 	.valid_in       (buffer_valid_in	)
 );
- 
-//5×5矩阵
-matrix_5x5 u_matrix_5x5
+
+//3×3矩阵
+matrix_3x3 u_matrix_3x3
 (
 	.clk  			(lcd_pclk		),
 	.rst_n          (rst_n			),
@@ -175,8 +171,6 @@ matrix_5x5 u_matrix_5x5
 	.din1           (buffer_dout1	),
 	.din2           (buffer_dout2	),
 	.din3           (buffer_dout3	),
-	.din4           (buffer_dout4	),
-	.din5           (buffer_dout5	),
 	.dout           (matrix_dout	)
 ); 
  
