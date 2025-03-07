@@ -33,7 +33,7 @@ wire  [7 :0]  rom_rd_data_gamma ;	//ROM_gamma数据
 //**                    main code
 //*****************************************************
 assign  rom_rd_en = 1'b1;                  //读使能拉高，即一直读ROM数据
-assign	rom_addr_gamma = gray;			   //通过当前gray值去ROM中找对应的gamma值
+assign	rom_addr_gamma = gray;			   //通过当前gray值去ROM中找经过gamma变换后的值
 assign 	rom_addr = ((pixel_xpos >= PIC_X_START) && (pixel_xpos < PIC_X_START + PIC_WIDTH) 
 					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT)) ? rom_addr_pic:rom_addr_gray;		
 
@@ -107,7 +107,7 @@ blk_mem_gen_0  blk_mem_gen_0
 	.douta (rom_rd_data)  // output wire [23 : 0] douta
 );
 
-//ROM：存储gamma值
+//ROM：存储经过gamma变换后的值
 blk_mem_gen_1  blk_mem_gen_1 
 (
 	.clka  (lcd_pclk),    		// input wire clka
