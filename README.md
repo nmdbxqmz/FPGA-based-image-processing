@@ -22,4 +22,13 @@
 * 这里只给出需要手动修改的配置，其他配置保持默认即可
 * 在Native Ports中，读模式选择First Word Fall Through，修改写位宽和写深度，写位宽应等于传入图像的像素点位数，写深度应大于等于传入图像的宽度，最后复位模式选择异步复位，如下图所示：
   ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/fifo_native.png)
+
+## 特殊工程说明
+* 即除了需要配置上述的ROM和FIFO外，还需要进行一些额外操作的项目
+### gray_gamma
+* 因为FPGA进行指数计算比较麻烦，所以该工程使用python计算出0~255的灰度值经过gamma变换后对应的值并生成coe文件，然后存入ROM中，这样就可以根据当前灰度值去ROM中找到gamma变换后对应的值
+* [gamma.py](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/gray_gamma/gamma.py)是用来计算0~255的灰度值经过gamma变换后对应的值并生成coe文件的程序，在使用过程中只需要修改如下图所示的gamma值即可：
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/gamma_py.png)
+* 在执行完上面的ROM IP核配置后，这里还需要额外配置一个ROM来存储gamma变换后对应的灰度值，在Port A Options中修改位宽为8、深度为256，其余配置和上面的一样（注：默认第一个ROM IP核名称为blk_mem_gen_0，第二个为blk_mem_gen_1，因为在.v文件中blk_mem_gen_0存储的为原图，blk_mem_gen_1存储的为gamma变换后对应的灰度值，所以生成ROM IP核的顺序不要弄错了）
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/gamma_rom.png)
   
