@@ -20,7 +20,7 @@
 ## FIFO ip核配置
 * average、corrode、dilate、gaussian3、gaussian5，middle、sobel需要配置该ip核
 * 这里只给出需要手动修改的配置，其他配置保持默认即可
-* 在Native Ports中，读模式选择First Word Fall Through，修改写位宽和写深度，写位宽应等于传入图像的像素点位数，写深度应大于等于传入图像的宽度，最后复位模式选择异步复位，如下图所示：
+* 在Native Ports中，读模式选择First Word Fall Through，修改写位宽和写深度，写位宽应等于传入图像的像素点位宽，写深度应大于等于传入图像的宽度，最后复位模式选择异步复位，如下图所示：
   ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/fifo_native.png)
 
 ## 特殊工程说明
