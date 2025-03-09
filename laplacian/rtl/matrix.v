@@ -115,7 +115,10 @@ begin
 				dout <= 24'hffffff;
 		end
 	else	 
-		dout <= dout;
+		begin
+			dout <= dout;
+			laplacian <= laplacian;
+		end
 end
 
 endmodule

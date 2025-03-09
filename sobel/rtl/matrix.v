@@ -119,8 +119,12 @@ begin
 			else
 				dout <= {3{- GX - GY}};
 		end
-	else	 
-		dout <= dout;
+	else	
+		begin
+			dout <= dout;
+			GX <= GX;
+			GY <= GY;
+		end
 end
 
 endmodule
