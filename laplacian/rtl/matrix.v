@@ -29,8 +29,7 @@ reg [WIDTH-1:0] din3_1;
 reg [WIDTH-1:0] din3_2;
 reg [WIDTH-1:0] din3_3;
 reg [8:0]		cnt;
-reg [7:0]		GX;
-reg [7:0]		GY;
+reg [7:0]		laplacian;	
 
 //数据存入
 always @(posedge clk or negedge rst_n) 
@@ -103,21 +102,17 @@ begin
 	if(!rst_n)
 		begin	
 			dout <= 24'd0;
-			GX <= 8'd0;
-			GY <= 8'd0;
+			laplacian <= 8'd0;
 		end
 	else if(valid_in && (cnt > 9'd2))
 		begin
-			GX <= (1*din1_3[7:0] + 2*din2_3[7:0] + 1*din3_3[7:0]) - (1*din1_1[7:0] + 2*din2_1[7:0] + 1*din3_1[7:0]);
-			GY <= (1*din1_1[7:0] + 2*din1_2[7:0] + 1*din2_3[7:0]) - (1*din3_1[7:0] + 2*din3_2[7:0] + 1*din3_3[7:0]);
-			if (GX >= 8'd0 && GY >= 8'd0)
-				dout <= {3{GX + GY}};
-			else if(GX >= 8'd0 && GY < 8'd0)
-				dout <= {3{GX - GY}};
-			else if(GX < 8'd0 && GY >= 8'd0)
-				dout <= {3{GY - GX}};
-			else
-				dout <= {3{- GX - GY}};
+			laplacian <= 4*din2_2[7:0] - (1*din1_2 - 1*din2_1 - 1*din2_3 - 1*din3_2);
+			if(laplacian >= 8'd0 && laplacian <= 8'd255)
+				dout <= {3{laplacian}};
+			else if(laplacian < 8'd0)
+				dout <= 24'h000000;
+			else	
+				dout <= 24'hffffff;
 		end
 	else	 
 		dout <= dout;
