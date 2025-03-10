@@ -111,13 +111,33 @@ begin
 			GX <= (1*din1_3[7:0] + 2*din2_3[7:0] + 1*din3_3[7:0]) - (1*din1_1[7:0] + 2*din2_1[7:0] + 1*din3_1[7:0]);
 			GY <= (1*din1_1[7:0] + 2*din1_2[7:0] + 1*din2_3[7:0]) - (1*din3_1[7:0] + 2*din3_2[7:0] + 1*din3_3[7:0]);
 			if (GX >= 8'd0 && GY >= 8'd0)
-				dout <= {3{GX + GY}};
+				begin
+					if((GX + GY) > 8'd255)
+						dout <= 8'd255;
+					else
+						dout <= {GX + GY};
+				end
 			else if(GX >= 8'd0 && GY < 8'd0)
-				dout <= {3{GX - GY}};
+				begin
+					if((GX - GY) > 8'd255)
+						dout <= 8'd255;
+					else
+						dout <= {GX - GY};
+				end
 			else if(GX < 8'd0 && GY >= 8'd0)
-				dout <= {3{GY - GX}};
+				begin
+					if((GY - GX) > 8'd255)
+						dout <= 8'd255;
+					else
+						dout <= {GY - GX};
+				end
 			else
-				dout <= {3{- GX - GY}};
+				begin
+					if((- GX - GY) > 8'd255)
+						dout <= 8'd255;
+					else
+						dout <= {- GX - GY};
+				end
 		end
 	else	
 		begin

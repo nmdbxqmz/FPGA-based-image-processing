@@ -53,8 +53,8 @@ assign  rom_rd_en = 1'd1;                  //读使能拉高，即一直读ROM数据
 assign 	rom_addr = ((pixel_xpos >= PIC_X_START) && (pixel_xpos < PIC_X_START + PIC_WIDTH) 
 					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT)) ? rom_addr_pic:rom_addr_buffer;
 assign	rd_en_all = ( ((pixel_xpos >= PIC_X_START - 4'd11 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd11 + PIC_X_DIVIDE) 
-					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT - 3'd4))
-					|| ((cnt_buffer >= 11'd750) && (cnt_buffer <= PRE_READ_NUM)) ) ? 1'b1:1'b0;
+					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT - 3'd5))
+					|| ((cnt_buffer >= 11'd751) && (cnt_buffer <= PRE_READ_NUM)) ) ? 1'b1:1'b0;
 assign	rd_en_all2 = ((pixel_xpos >= PIC_X_START - 4'd5 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd7 + PIC_X_DIVIDE) 
 					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT - 3'd4)) ? 1'b1:1'b0;					
 assign	rst_fifo = 	(pixel_ypos == PIC_Y_START + PIC_HEIGHT - 3'd4 && pixel_xpos == PIC_X_START + PIC_WIDTH + PIC_X_DIVIDE - 3'd4) ? 1'b0:1'b1;					
@@ -98,7 +98,7 @@ always @(posedge lcd_pclk or negedge rst_n)
 begin
     if(!rst_n)
 		cnt_buffer <= 11'd0;
-	else if(pixel_ypos <= PIC_Y_START && cnt_buffer <= PRE_READ_NUM && !fifo_rst_busy)	
+	else if(pixel_ypos <= PIC_Y_START && (cnt_buffer <= PRE_READ_NUM + 11'd2) && !fifo_rst_busy)	
 		cnt_buffer <= cnt_buffer + 1'd1;
 	else if(!rst_fifo)
 		cnt_buffer <= 11'd0;
@@ -113,7 +113,7 @@ begin
         rom_addr_buffer <= 16'd0;
 	else if(pixel_ypos <= PIC_Y_START && cnt_buffer < PRE_READ_NUM && !fifo_rst_busy)
 		rom_addr_buffer <= rom_addr_buffer + 1'd1;
-	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd5)) 
+	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd6)) 
 			&& (pixel_xpos >= PIC_X_START - 4'd12 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd12 + PIC_X_DIVIDE)) 
         rom_addr_buffer <= rom_addr_buffer + 1'd1;
     else if(!rst_fifo)
@@ -129,7 +129,7 @@ begin
 		buffer_valid_in <= 1'd0;
 	else if(pixel_ypos <= PIC_Y_START && cnt_buffer < PRE_READ_NUM && !fifo_rst_busy)
 		buffer_valid_in <= 1'd1;
-	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd5)) 
+	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd6)) 
 			&& (pixel_xpos >= PIC_X_START - 4'd12 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd12 + PIC_X_DIVIDE)) 
 		buffer_valid_in <= 1'd1;
 	else
@@ -141,7 +141,7 @@ always @(posedge lcd_pclk or negedge rst_n)
 begin
     if(!rst_n)
 		buffer_valid_in2 <= 1'd0;
-	else if(cnt_buffer >= 11'd753 && cnt_buffer <= PRE_READ_NUM && cnt_buffer != 11'd1001 && cnt_buffer != 11'd1002 && cnt_buffer != 11'd1251 && cnt_buffer != 11'd1252)
+	else if(cnt_buffer >= 11'd755 && (cnt_buffer <= PRE_READ_NUM + 11'd2)&& !(cnt_buffer >= 11'd1003 && cnt_buffer <= 11'd1005) && !(cnt_buffer >= 11'd1253 && cnt_buffer <= 11'd1255))
 		buffer_valid_in2 <= 1'd1;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd5)) 
 			&& (pixel_xpos >= PIC_X_START - 4'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd8 + PIC_X_DIVIDE)) 
@@ -155,10 +155,10 @@ always @(posedge lcd_pclk or negedge rst_n)
 begin
     if(!rst_n)
 		matrix_valid_in <= 1'd0;
-	else if(cnt_buffer >= 10'd749 && cnt_buffer < PRE_READ_NUM)
+	else if(cnt_buffer >= 10'd750 && (cnt_buffer <= PRE_READ_NUM + 11'd2))
 		matrix_valid_in <= 1'd1;
-	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd4)) 
-			&& (pixel_xpos >= PIC_X_START - 4'd12 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd14 + PIC_X_DIVIDE)) 
+	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd5)) 
+			&& (pixel_xpos >= PIC_X_START - 4'd12 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd12 + PIC_X_DIVIDE)) 
 		matrix_valid_in <= 1'd1;
 	else
 		matrix_valid_in <= 1'd0;

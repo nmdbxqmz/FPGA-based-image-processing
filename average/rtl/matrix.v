@@ -116,7 +116,12 @@ begin
 			dout <= {R, G, B};
 		end
 	else	 
-		dout <= dout;
+		begin
+			dout <= dout;
+			B <= B;
+			G <= G;
+			R <= R;
+		end
 end
 
 endmodule
