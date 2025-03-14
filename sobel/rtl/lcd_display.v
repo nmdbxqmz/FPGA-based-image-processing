@@ -132,7 +132,7 @@ begin
     if(!rst_n)
 		matrix_valid_in <= 1'd0;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 2'd2)) 
-			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd6 + PIC_X_DIVIDE)) 
+			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd4 + PIC_X_DIVIDE)) 
 		matrix_valid_in <= 1'd1;
 	else
 		matrix_valid_in <= 1'd0;

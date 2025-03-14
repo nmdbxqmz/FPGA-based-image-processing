@@ -45,9 +45,9 @@ wire  [WIDTH-1:0]  	matrix_dout;
 assign  rom_rd_en = 1'd1;                  //读使能拉高，即一直读ROM数据
 assign 	rom_addr = ((pixel_xpos >= PIC_X_START) && (pixel_xpos < PIC_X_START + PIC_WIDTH) 
 					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT)) ? rom_addr_pic:rom_addr_buffer;
-assign	rd_en_all = ((pixel_xpos >= PIC_X_START - 3'd4 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd4 + PIC_X_DIVIDE) 
+assign	rd_en_all = ((pixel_xpos >= PIC_X_START - 3'd5 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd5 + PIC_X_DIVIDE) 
 					&& (pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + PIC_HEIGHT - 2'd2)) ? 1'b1:1'b0; 	
-assign	rst_fifo = 	(pixel_ypos == PIC_Y_START + PIC_HEIGHT - 2'd2 && pixel_xpos == PIC_X_START + PIC_WIDTH + PIC_X_DIVIDE) ? 1'b0:1'b1;					
+assign	rst_fifo = 	(pixel_ypos == PIC_Y_START + PIC_HEIGHT - 2'd2 && pixel_xpos == PIC_X_START + PIC_WIDTH + PIC_X_DIVIDE - 2'd2) ? 1'b0:1'b1;					
 
 //根据当前像素点坐标指定当前像素点颜色数据
 always @(posedge lcd_pclk or negedge rst_n) 
@@ -104,7 +104,7 @@ begin
 	else if(pixel_ypos <= PIC_Y_START && cnt_buffer < PRE_READ_NUM && !fifo_rst_busy)
 		rom_addr_buffer <= rom_addr_buffer + 1'd1;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 2'd3)) 
-			&& (pixel_xpos >= PIC_X_START - 3'd5 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd5 + PIC_X_DIVIDE)) 
+			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd6 + PIC_X_DIVIDE)) 
         rom_addr_buffer <= rom_addr_buffer + 1'd1;
     else if(!rst_fifo)
         rom_addr_buffer <= 16'd0;
@@ -120,7 +120,7 @@ begin
 	else if(pixel_ypos <= PIC_Y_START && cnt_buffer < PRE_READ_NUM && !fifo_rst_busy)
 		buffer_valid_in <= 1'd1;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 2'd3)) 
-			&& (pixel_xpos >= PIC_X_START - 3'd5 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd5 + PIC_X_DIVIDE)) 
+			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd6 + PIC_X_DIVIDE)) 
 		buffer_valid_in <= 1'd1;
 	else
 		buffer_valid_in <= 1'd0;
@@ -132,7 +132,7 @@ begin
     if(!rst_n)
 		matrix_valid_in <= 1'd0;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 2'd2)) 
-			&& (pixel_xpos >= PIC_X_START - 3'd5 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd5 + PIC_X_DIVIDE)) 
+			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 3'd4 + PIC_X_DIVIDE)) 
 		matrix_valid_in <= 1'd1;
 	else
 		matrix_valid_in <= 1'd0;

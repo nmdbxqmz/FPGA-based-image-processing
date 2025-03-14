@@ -6,6 +6,7 @@ module matrix_corrode
     din1,
     din2,
 	din3,
+	valid_out,
     dout
 );
 
@@ -19,6 +20,7 @@ input 				   valid_in;
 input 	   [WIDTH-1:0] din1;
 input 	   [WIDTH-1:0] din2;
 input      [WIDTH-1:0] din3;
+output reg  		   valid_out;
 output reg [WIDTH-1:0] dout;
 
 //reg define
@@ -91,13 +93,24 @@ begin
 		begin
 			if(cnt < PIC_WIDTH)
 				cnt <= cnt + 9'd1;
-			else if(cnt == PIC_WIDTH)
+			else if(cnt >= (PIC_WIDTH + 9'd1))
 				cnt <= 9'd0;
 			else
 				cnt <= cnt;
 		end
 	else	
 		cnt <= cnt;
+end
+
+//矩阵允许输出判断
+always @(posedge clk or negedge rst_n) 
+begin
+	if(!rst_n)
+		valid_out <= 1'd0;
+	else if(valid_in && (cnt > 9'd3))
+		valid_out <= 1'd1;
+	else
+		valid_out <= 1'd0;
 end
 
 //矩阵计算

@@ -91,7 +91,7 @@ begin
 		begin
 			if(cnt < PIC_WIDTH)
 				cnt <= cnt + 9'd1;
-			else if(cnt == PIC_WIDTH)
+			else if(cnt >= (PIC_WIDTH + 9'd1))
 				cnt <= 9'd0;
 			else
 				cnt <= cnt;

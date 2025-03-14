@@ -43,6 +43,7 @@ wire		 		rst_fifo;			//fifo行缓存1、2复位信号
 wire				rd_en_all;			//行缓存1允许读出
 wire				rd_en_all2;			//行缓存2允许读出
 wire		  		fifo_rst_busy;		//fifo行缓存1、2复位繁忙信号
+wire				m1_valid_out;		//矩阵1允许输出
 wire  [WIDTH-1:0]  	matrix_dout;		//矩阵1输出
 wire  [WIDTH-1:0]  	matrix_dout2;		//矩阵2输出
 
@@ -141,7 +142,7 @@ always @(posedge lcd_pclk or negedge rst_n)
 begin
     if(!rst_n)
 		buffer_valid_in2 <= 1'd0;
-	else if(cnt_buffer >= 11'd755 && (cnt_buffer <= PRE_READ_NUM + 11'd2)&& !(cnt_buffer >= 11'd1003 && cnt_buffer <= 11'd1005) && !(cnt_buffer >= 11'd1253 && cnt_buffer <= 11'd1255))
+	else if(cnt_buffer >= 11'd755 && (cnt_buffer <= PRE_READ_NUM + 11'd2) && m1_valid_out)
 		buffer_valid_in2 <= 1'd1;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd5)) 
 			&& (pixel_xpos >= PIC_X_START - 4'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd8 + PIC_X_DIVIDE)) 
@@ -158,7 +159,7 @@ begin
 	else if(cnt_buffer >= 10'd750 && (cnt_buffer <= PRE_READ_NUM + 11'd2))
 		matrix_valid_in <= 1'd1;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd5)) 
-			&& (pixel_xpos >= PIC_X_START - 4'd12 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd12 + PIC_X_DIVIDE)) 
+			&& (pixel_xpos >= PIC_X_START - 4'd12 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd10 + PIC_X_DIVIDE)) 
 		matrix_valid_in <= 1'd1;
 	else
 		matrix_valid_in <= 1'd0;
@@ -170,7 +171,7 @@ begin
     if(!rst_n)
 		matrix_valid_in2 <= 1'd0;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd4)) 
-			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd8 + PIC_X_DIVIDE)) 
+			&& (pixel_xpos >= PIC_X_START - 3'd6 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd6 + PIC_X_DIVIDE)) 
 		matrix_valid_in2 <= 1'd1;
 	else
 		matrix_valid_in2 <= 1'd0;
@@ -230,6 +231,7 @@ u_matrix_dilate
 	.din1           (buffer_dout1_1	),
 	.din2           (buffer_dout1_2	),
 	.din3           (buffer_dout1_3	),
+	.valid_out		(m1_valid_out	),
 	.dout           (matrix_dout	)
 ); 
 
