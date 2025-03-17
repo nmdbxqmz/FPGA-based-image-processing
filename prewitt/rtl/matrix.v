@@ -86,15 +86,13 @@ begin
 		cnt <= 9'd0;
 	else if(valid_in)
 		begin
-			if(cnt < PIC_WIDTH)
+			if(cnt < (PIC_WIDTH - 11'd1))
 				cnt <= cnt + 9'd1;
-			else if(cnt >= (PIC_WIDTH + 9'd1))
-				cnt <= 9'd0;
 			else
-				cnt <= cnt;
+				cnt <= 9'd0;
 		end
 	else	
-		cnt <= cnt;
+		cnt <= 9'd0;
 end
 
 //矩阵计算
@@ -106,37 +104,37 @@ begin
 			GX <= 8'd0;
 			GY <= 8'd0;
 		end
-	else if(valid_in && (cnt > 9'd2))
+	else if(valid_in)
 		begin
-			GX <= (1*din1_3[7:0] + 1*din2_3[7:0] + 1*din3_3[7:0]) - (1*din1_1[7:0] + 1*din2_1[7:0] + 1*din3_1[7:0]);
-			GY <= (1*din1_1[7:0] + 1*din1_2[7:0] + 1*din2_3[7:0]) - (1*din3_1[7:0] + 1*din3_2[7:0] + 1*din3_3[7:0]);
+			GX <= (1*din1_1[7:0] + 1*din2_1[7:0] + 1*din3_1[7:0]) - (1*din1_3[7:0] + 1*din2_3[7:0] + 1*din3_3[7:0]);
+			GY <= (1*din1_1[7:0] + 1*din1_2[7:0] + 1*din1_3[7:0]) - (1*din3_1[7:0] + 1*din3_2[7:0] + 1*din3_3[7:0]);
 			if (GX >= 8'd0 && GY >= 8'd0)
 				begin
 					if((GX + GY) > 8'd255)
-						dout <= 8'd255;
+						dout <= 24'hffffff;
 					else
-						dout <= {GX + GY};
+						dout <= {3{GX + GY}};
 				end
 			else if(GX >= 8'd0 && GY < 8'd0)
 				begin
 					if((GX - GY) > 8'd255)
-						dout <= 8'd255;
+						dout <= 24'hffffff;
 					else
-						dout <= {GX - GY};
+						dout <= {3{GX - GY}};
 				end
 			else if(GX < 8'd0 && GY >= 8'd0)
 				begin
 					if((GY - GX) > 8'd255)
-						dout <= 8'd255;
+						dout <= 24'hffffff;
 					else
-						dout <= {GY - GX};
+						dout <= {3{GY - GX}};
 				end
 			else
 				begin
 					if((- GX - GY) > 8'd255)
-						dout <= 8'd255;
+						dout <= 24'hffffff;
 					else
-						dout <= {- GX - GY};
+						dout <= {3{- GX - GY}};
 				end
 		end
 	else	 

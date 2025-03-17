@@ -93,7 +93,7 @@ begin
 				cnt <= cnt;
 		end
 	else	
-		cnt <= cnt;
+		cnt <= 9'd0;
 end
 
 //矩阵计算
@@ -104,7 +104,7 @@ begin
 			dout <= 24'd0;
 			max <= 24'd0;
 		end
-	else if(valid_in && (cnt > 9'd2))
+	else if(valid_in)
 		begin
 			if(din2_1 >= din1_2 && din2_1 >= din2_2 && din2_1 >= din3_2 && din2_1 >= din2_3)
 				max <= din2_1;

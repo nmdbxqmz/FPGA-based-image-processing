@@ -104,7 +104,7 @@ blk_mem_gen_0  blk_mem_gen_0
 (
 	.clka  (lcd_pclk),    // input wire clka
 	.ena   (rom_rd_en),   // input wire ena
-	.addra (rom_addr),    // input wire [18 : 0] addra
+	.addra (rom_addr),    // input wire [16 : 0] addra
 	.douta (rom_rd_data)  // output wire [23 : 0] douta
 );
 

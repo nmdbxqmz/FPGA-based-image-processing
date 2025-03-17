@@ -134,7 +134,7 @@ begin
     if(!rst_n)
 		matrix_valid_in <= 1'd0;
 	else if((pixel_ypos >= PIC_Y_START) && (pixel_ypos < PIC_Y_START + (PIC_HEIGHT - 3'd4)) 
-			&& (pixel_xpos >= PIC_X_START - 4'd8 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd8 + PIC_X_DIVIDE)) 
+			&& (pixel_xpos >= PIC_X_START - 4'd8 + PIC_X_DIVIDE) && (pixel_xpos < PIC_X_START + PIC_WIDTH - 4'd6 + PIC_X_DIVIDE)) 
 		matrix_valid_in <= 1'd1;
 	else
 		matrix_valid_in <= 1'd0;
@@ -145,7 +145,7 @@ blk_mem_gen_0  blk_mem_gen_0
 (
 	.clka  (lcd_pclk),    // input wire clka
 	.ena   (rom_rd_en),   // input wire ena
-	.addra (rom_addr),    // input wire [18 : 0] addra
+	.addra (rom_addr),    // input wire [16 : 0] addra
 	.douta (rom_rd_data)  // output wire [23 : 0] douta
 );
 

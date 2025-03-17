@@ -88,15 +88,13 @@ begin
 		cnt <= 9'd0;
 	else if(valid_in)
 		begin
-			if(cnt < PIC_WIDTH)
+			if(cnt < (PIC_WIDTH - 11'd1))
 				cnt <= cnt + 9'd1;
-			else if(cnt >= (PIC_WIDTH + 9'd1))
-				cnt <= 9'd0;
 			else
-				cnt <= cnt;
+				cnt <= 9'd0;
 		end
 	else	
-		cnt <= cnt;
+		cnt <= 9'd0;
 end
 
 //矩阵计算

@@ -175,15 +175,13 @@ begin
 		cnt <= 9'd0;
 	else if(valid_in)
 		begin
-			if(cnt < PIC_WIDTH)
+			if(cnt < (PIC_WIDTH - 11'd1))
 				cnt <= cnt + 9'd1;
-			else if(cnt >= (PIC_WIDTH + 9'd1))
-				cnt <= 9'd0;
 			else
-				cnt <= cnt;
+				cnt <= 9'd0;
 		end
 	else	
-		cnt <= cnt;
+		cnt <= 9'd0;
 end
 
 //矩阵计算（找中值）
@@ -194,7 +192,7 @@ begin
 			dout <= 24'd0;
 			middle <= 24'd0;
 		end
-	else if(valid_in && (cnt > 9'd2))
+	else if(valid_in)
 		begin
 			if((din2_max <= din1_min && din1_max <= din2_min) || ((din3_max <= din1_min && din1_max <= din2_min)))
 				middle <= din1_mid;

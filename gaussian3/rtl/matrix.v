@@ -87,15 +87,13 @@ begin
 		cnt <= 9'd0;
 	else if(valid_in)
 		begin
-			if(cnt < PIC_WIDTH)
+			if(cnt < (PIC_WIDTH - 11'd1))
 				cnt <= cnt + 9'd1;
-			else if(cnt >= (PIC_WIDTH + 9'd1))
-				cnt <= 9'd0;
 			else
-				cnt <= cnt;
+				cnt <= 9'd0;
 		end
 	else	
-		cnt <= cnt;
+		cnt <= 9'd0;
 end
 
 //矩阵计算
@@ -108,7 +106,7 @@ begin
 			G <= 8'd0;
 			B <= 8'd0;
 		end
-	else if(valid_in && (cnt > 9'd2))
+	else if(valid_in)
 		begin
 			B <= (1*din1_1[7:0] + 2*din1_2[7:0] + 1*din1_3[7:0] + 2*din2_1[7:0] + 4*din2_2[7:0] + 2*din2_3[7:0] + 1*din3_1[7:0] + 2*din3_2[7:0] + 1*din3_3[7:0]) / 16;
 			G <= (1*din1_1[15:8] + 2*din1_2[15:8] + 1*din1_3[15:8] + 2*din2_1[15:8] + 4*din2_2[15:8] + 2*din2_3[15:8] + 1*din3_1[15:8] + 2*din3_2[15:8] + 1*din3_3[15:8]) / 16;
