@@ -12,6 +12,7 @@ module matrix_gaussian
 
 //parameter define 
 parameter  PIC_WIDTH    = 11'd250;    //图片宽度
+parameter  WIDTH 		= 8;		  //数据位宽
 
 //port define
 input 				   clk;

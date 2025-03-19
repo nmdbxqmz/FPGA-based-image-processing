@@ -1,5 +1,3 @@
-parameter  WIDTH 		= 8;		  //数据位宽
-
 module lcd_display
 (
     input                lcd_pclk,    //时钟
@@ -11,12 +9,13 @@ module lcd_display
     output  reg  [23:0]  pixel_data   //像素数据
 );
 
-//parameter define                   
+//parameter define         
+parameter  PIC_WIDTH    = 11'd250;    	 //图片宽度
+parameter  PIC_HEIGHT   = 11'd250;    	 //图片高度
+parameter  WIDTH 		= 8;		  	 //数据位宽          
 localparam PIC_X_START  = 11'd10;      	 //图片起始点横坐标(>=2)
 localparam PIC_X_DIVIDE = 11'd300;    	 //图片横坐标相差距离
 localparam PIC_Y_START  = 11'd10;     	 //图片起始点纵坐标(>=0)
-parameter  PIC_WIDTH    = 11'd250;    	 //图片宽度
-parameter  PIC_HEIGHT   = 11'd250;    	 //图片高度
 localparam PRE_READ_NUM = 11'd1500;	 	 //预读像素点数量(=6×PIC_WIDTH)
 localparam WHITE 		= 24'hFFFFFF; 
 
@@ -182,7 +181,7 @@ blk_mem_gen_0  blk_mem_gen_0
 (
 	.clka  (lcd_pclk),    // input wire clka
 	.ena   (rom_rd_en),   // input wire ena
-	.addra (rom_addr),    // input wire [16 : 0] addra
+	.addra (rom_addr),    // input wire [15 : 0] addra
 	.douta (rom_rd_data)  // output wire [8 : 0] douta
 );
 

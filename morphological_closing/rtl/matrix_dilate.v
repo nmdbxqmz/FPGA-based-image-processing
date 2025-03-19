@@ -12,6 +12,7 @@ module matrix_dilate
 
 //parameter define 
 parameter  PIC_WIDTH    = 11'd250;    //图片宽度
+parameter  WIDTH 		= 24;		  //数据位宽    
 
 //port define
 input 				   clk;
@@ -36,6 +37,7 @@ reg [WIDTH-1:0] din3_3;
 reg [8:0]		cnt;
 reg [WIDTH-1:0]	max;
 
+//矩阵允许输出判断
 assign valid_out = (cnt != 9'd2 && cnt != 9'd3) ? 1'd1:1'd0;
 
 //数据存入

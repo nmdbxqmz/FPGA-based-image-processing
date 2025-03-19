@@ -9,6 +9,10 @@ module matrix_3x3
     dout
 );
 
+//parameter define     
+parameter  PIC_WIDTH    = 11'd250;    //图片宽度
+parameter  WIDTH 		= 24;		  //数据位宽 
+
 //port define
 input 				   clk;
 input 				   rst_n;
@@ -19,18 +23,29 @@ input      [WIDTH-1:0] din3;
 output reg [WIDTH-1:0] dout;
 
 //reg define
-reg [WIDTH-1:0] din1_1;
-reg [WIDTH-1:0] din1_2;
-reg [WIDTH-1:0] din1_3;
-reg [WIDTH-1:0] din2_1;
-reg [WIDTH-1:0] din2_2;
-reg [WIDTH-1:0] din2_3;
-reg [WIDTH-1:0] din3_1;
-reg [WIDTH-1:0] din3_2;
-reg [WIDTH-1:0] din3_3;
-reg [8:0]		cnt;
-reg [7:0]		GX;
-reg [7:0]		GY;
+reg 		[WIDTH-1:0] din1_1;
+reg 		[WIDTH-1:0] din1_2;
+reg 		[WIDTH-1:0] din1_3;
+reg 		[WIDTH-1:0] din2_1;
+reg 		[WIDTH-1:0] din2_2;
+reg 		[WIDTH-1:0] din2_3;
+reg 		[WIDTH-1:0] din3_1;
+reg 		[WIDTH-1:0] din3_2;
+reg 		[WIDTH-1:0] din3_3;
+reg 		[8:0]		cnt;
+reg signed 	[12:0]		GX;
+reg signed 	[12:0]		GY;
+reg signed 	[11:0]		prewitt1;
+reg signed 	[11:0]		prewitt2;
+reg signed 	[11:0]		prewitt3;
+reg signed 	[11:0]		prewitt4;
+reg signed 	[12:0]		standard;
+
+//初始化
+initial
+begin
+	standard <= 13'd0;
+end
 
 //数据存入
 always @(posedge clk or negedge rst_n) 
@@ -101,47 +116,59 @@ begin
 	if(!rst_n)
 		begin	
 			dout <= 24'd0;
-			GX <= 8'd0;
-			GY <= 8'd0;
+			GX <= 13'd0;
+			GY <= 13'd0;
+			prewitt1 <= 12'd0;
+			prewitt2 <= 12'd0;
+			prewitt3 <= 12'd0;
+			prewitt4 <= 12'd0;
 		end
 	else if(valid_in)
-		begin
-			GX <= (1*din1_1[7:0] + 1*din2_1[7:0] + 1*din3_1[7:0]) - (1*din1_3[7:0] + 1*din2_3[7:0] + 1*din3_3[7:0]);
-			GY <= (1*din1_1[7:0] + 1*din1_2[7:0] + 1*din1_3[7:0]) - (1*din3_1[7:0] + 1*din3_2[7:0] + 1*din3_3[7:0]);
-			if (GX >= 8'd0 && GY >= 8'd0)
+		begin		////这里prewitt1、2、3、4各计算一次是用来取prewitt的绝对值，方便dout的截位操作
+			prewitt1 <= ((din1_1[7:0] + din2_1[7:0] + din3_1[7:0]) - (din1_3[7:0] + din2_3[7:0] + din3_3[7:0])) + ((din1_1[7:0] + din1_2[7:0] + din2_3[7:0]) - (din3_1[7:0] + din3_2[7:0] + din3_3[7:0]));
+			prewitt2 <= ((din1_1[7:0] + din2_1[7:0] + din3_1[7:0]) - (din1_3[7:0] + din2_3[7:0] + din3_3[7:0])) + ((din3_1[7:0] + din3_2[7:0] + din3_3[7:0]) - (din1_1[7:0] + din1_2[7:0] + din2_3[7:0]));
+			prewitt3 <= ((din1_3[7:0] + din2_3[7:0] + din3_3[7:0]) - (din1_1[7:0] + din2_1[7:0] + din3_1[7:0])) + ((din1_1[7:0] + din1_2[7:0] + din2_3[7:0]) - (din3_1[7:0] + din3_2[7:0] + din3_3[7:0]));
+			prewitt4 <= ((din1_3[7:0] + din2_3[7:0] + din3_3[7:0]) - (din1_1[7:0] + din2_1[7:0] + din3_1[7:0])) + ((din3_1[7:0] + din3_2[7:0] + din3_3[7:0]) - (din1_1[7:0] + din1_2[7:0] + din2_3[7:0]));
+			GX <= (din1_1[7:0] + din2_1[7:0] + din3_1[7:0]) - (din1_3[7:0] + din2_3[7:0] + din3_3[7:0]);                                                  
+			GY <= (din1_1[7:0] + din1_2[7:0] + din2_3[7:0]) - (din3_1[7:0] + din3_2[7:0] + din3_3[7:0]);
+			if(GX >= standard && GY >= standard)
 				begin
-					if((GX + GY) > 8'd255)
+					if(prewitt1 >= 13'd255)
 						dout <= 24'hffffff;
 					else
-						dout <= {3{GX + GY}};
+						dout <= {3{prewitt1[7:0]}};
 				end
-			else if(GX >= 8'd0 && GY < 8'd0)
+			else if(GX >= standard && GY < standard)
 				begin
-					if((GX - GY) > 8'd255)
+					if(prewitt2 >= 13'd255)
 						dout <= 24'hffffff;
 					else
-						dout <= {3{GX - GY}};
+						dout <= {3{prewitt2[7:0]}};
 				end
-			else if(GX < 8'd0 && GY >= 8'd0)
+			else if(GX < standard && GY >= standard)
 				begin
-					if((GY - GX) > 8'd255)
+					if(prewitt3 >= 13'd255)
 						dout <= 24'hffffff;
 					else
-						dout <= {3{GY - GX}};
+						dout <= {3{prewitt3[7:0]}};
 				end
 			else
 				begin
-					if((- GX - GY) > 8'd255)
+					if(prewitt4 >= 13'd255)
 						dout <= 24'hffffff;
 					else
-						dout <= {3{- GX - GY}};
+						dout <= {3{prewitt4[7:0]}};
 				end
 		end
-	else	 
+	else
 		begin
 			dout <= dout;
 			GX <= GX;
 			GY <= GY;
+			prewitt1 <= prewitt1;
+			prewitt2 <= prewitt2;
+			prewitt3 <= prewitt3;
+			prewitt4 <= prewitt4;
 		end
 end
 
