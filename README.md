@@ -37,6 +37,6 @@
 ## rom.py说明
 * 可将图片直接转换为rom.v文件，平替rom IP核，目前仅支持gray、rgb888，暂不支持rgb565
 * 需要修改的部分为最上方的img_path、img_width、rom_depth，img_path为图片路径，img_width为像素点位宽，rom_depth为rom的深度（大小），根据实际需求修改完参数直接运行即可，如下图所示：
-  ![]()
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/rom_py.png)
 * 将生成的rom.v直接添加到工程中即可，如果之前为该工程配置了rom核，则需要将该IP核及相关联文件删除
   
