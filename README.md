@@ -39,4 +39,8 @@
 * 需要修改的部分为最上方的img_path、img_width、rom_depth，img_path为图片路径，img_width为像素点位宽，rom_depth为rom的深度（大小），根据实际需求修改完参数直接运行即可，如下图所示：
   ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/rom_py.png)
 * 将生成的rom.v直接添加到工程中即可，如果之前为该工程配置了rom核，则需要将该IP核及相关联文件删除
+## fifo.v说明
+* 需要修改的部分为WIDTH、DEPTH和一些与位宽有关的语句，其中WIDTH应与像素点位宽一致，DEPTH应大于等于图片像素点的个数。如下图所示：
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/verilog_fifo.png)
+* 将verilog_for_ip文件夹中fifo.v直接添加到工程中即可，如果之前为该工程配置了fifo核，则需要将该IP核删除
   
