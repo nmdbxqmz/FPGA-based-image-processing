@@ -140,7 +140,7 @@ begin
 				end
 			else if(GX >= standard && GY < standard)
 				begin
-					if(sobel2 >= 13d255)
+					if(sobel2 >= 13'd255)
 						dout <= 24'hffffff;
 					else
 						dout <= {3{sobel2[7:0]}};
