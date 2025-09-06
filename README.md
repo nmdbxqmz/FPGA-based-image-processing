@@ -1,12 +1,12 @@
 # FPGA-based-image-processing
 
 ## 目录：
-* 工程描述
-* 说明
-* ip核配置
-* 特殊工程说明
-* verilog for ip说明
-* 工程输出结果说明
+* [工程描述](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#%E5%B7%A5%E7%A8%8B%E6%8F%8F%E8%BF%B0)
+* [说明](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#%E8%AF%B4%E6%98%8E)
+* [ip核配置](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#ip%E6%A0%B8%E9%85%8D%E7%BD%AE)
+* [特殊工程说明](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#%E7%89%B9%E6%AE%8A%E5%B7%A5%E7%A8%8B%E8%AF%B4%E6%98%8E)
+* [verilog for ip说明](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#verilog-for-ip%E8%AF%B4%E6%98%8E)
+* [工程输出结果说明](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#verilog-for-ip%E8%AF%B4%E6%98%8E)
 
 ## 工程描述
 * 本工程旨在将图像处理中的一些基本操作（二值化、灰度变换、边缘提取等）转换为Verilog语言并在FPGA上运行
@@ -61,4 +61,5 @@
 
 ## 工程输出结果说明
 * 该工程使用lcd来显示输出结果，lcd上会显示两张图像，左边的一张为输入的原始图像，右边的一张为经过处理后的图像，以下为canny和sobel的输出结果展示:
-  
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/canny.jpg)
+  ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/sobel.jpg)
