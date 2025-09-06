@@ -6,8 +6,8 @@
 * [ip核配置](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#ip%E6%A0%B8%E9%85%8D%E7%BD%AE)
 * [特殊工程说明](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#%E7%89%B9%E6%AE%8A%E5%B7%A5%E7%A8%8B%E8%AF%B4%E6%98%8E)
 * [verilog for ip说明](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#verilog-for-ip%E8%AF%B4%E6%98%8E)
-* [工程输出结果说明](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#verilog-for-ip%E8%AF%B4%E6%98%8E)
-
+* [工程输出结果说明](https://github.com/nmdbxqmz/FPGA-based-image-processing?tab=readme-ov-file#%E5%B7%A5%E7%A8%8B%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C%E8%AF%B4%E6%98%8E)
+  
 ## 工程描述
 * 本工程旨在将图像处理中的一些基本操作（二值化、灰度变换、边缘提取等）转换为Verilog语言并在FPGA上运行
 * 对本工程描述中“实时”的解释：比如用3×3核的canny算子，一共有4个阶段（gaussian算子处理、sobel算子处理、非极大值抑制、双阈值检测），一般计算机执行程序都是串行的，即执行完一个阶段后才能进行下一个阶段的操作，但在并行的FPGA上，一个阶段不用完全执行完就可以进行下一个阶段的操作，比如当gaussian算子处理输出3行数据后（即输出的数据够下一个阶段进行3×3开窗处理操作），就可以开始sobel算子处理了，同理其余阶段也是如此（有点类似非阻塞），这样输入的图像数据只被完整读取一遍后即可以输出处理后的图像，适合接入一个实时变化的图像输入源（比如摄像头，不过还未实现）
