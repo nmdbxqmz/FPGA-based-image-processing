@@ -1,5 +1,17 @@
 # FPGA-based-image-processing
 
+## 目录：
+* 工程描述
+* 说明
+* ip核配置
+* 特殊工程说明
+* verilog for ip说明
+* 工程输出结果说明
+
+## 工程描述
+* 本工程旨在将图像处理中的一些基本操作（二值化、灰度变换、边缘提取等）转换为Verilog语言并在FPGA上运行
+* 对本工程描述中“实时”的解释：比如用3×3核的canny算子，一共有4个阶段（gaussian算子处理、sobel算子处理、非极大值抑制、双阈值检测），一般计算机执行程序都是串行的，即执行完一个阶段后才能进行下一个阶段的操作，但在并行的FPGA上，一个阶段不用完全执行完就可以进行下一个阶段的操作，比如当gaussian算子处理输出3行数据后（即输出的数据够下一个阶段进行3×3开窗处理操作），就可以开始sobel算子处理了，同理其余阶段也是如此（有点类似非阻塞），这样输入的图像数据只被完整读取一遍后即可以输出处理后的图像，适合接入一个实时变化的图像输入源（比如摄像头，不过还未实现）
+
 ## 说明
 * 本仓库使用的板卡为正点原子的达芬奇A7，请根据自己实际的板卡资源对相关参数进行调整
 * lcd驱动使用的是正点原子的例程（魔改版），只支持800×480分辨率的lcd，请根据自己实际的lcd型号对lcd相关参数进行调整
@@ -7,7 +19,8 @@
   >https://blog.csdn.net/qq_39507748/article/details/115269289
 * 仓库中每一个文件夹（images、verilog_for_ip除外）对应一种图像处理方法，其中rtl文件夹装有源码，.coe文件为写入FPGA内部ROM的图像数据
 
-## ROM ip核配置
+## ip核配置
+### ROM ip核配置
 *  仓库中所有的图像处理方法都需要配置ip核
 *  这里只给出需要手动修改的配置，其他配置保持默认即可
 *  打开ROM ip核的配置，在Basic中将存储类型改为单口ROM，如下图所示：
@@ -17,7 +30,7 @@
 *  在Other Options中，勾选从文件中加载，并点击浏览，将.coe文件的路径添加进去，如下图所示：
   ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/rom_other.png)
 
-## FIFO ip核配置
+### FIFO ip核配置
 * 除binary、gray、gray_compress、gray_gamma、gray_rollback、gray_stretch外，其余的需要配置该ip核
 * 这里只给出需要手动修改的配置，其他配置保持默认即可
 * 在Native Ports中，读模式选择First Word Fall Through，修改写位宽和写深度，写位宽应等于传入图像的像素点位宽（gaussian_sobel为8、canny为10.其余都为24），写深度应大于等于传入图像的宽度，最后复位模式选择异步复位，如下图所示：
@@ -34,15 +47,18 @@
 
 ## verilog for ip说明
 *  该文件夹下的文件是为工程所使用到的rom、fifo IP核写的verilog代码，可将整个工程转为纯.v工程，便于在不同平台的板卡上移植
-## rom.py说明
+### rom.py说明
 * 可将图片直接转换为rom.v文件，平替rom IP核，目前仅支持gray、rgb888，暂不支持rgb565
 * 需要修改的部分为最上方的img_path、img_width、rom_depth，img_path为图片路径，img_width为像素点位宽，rom_depth为rom的深度（大小），根据实际需求修改完参数直接运行即可，如下图所示：
   ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/rom_py.png)
 * 将生成的rom.v直接添加到工程中即可，如果之前为该工程配置了rom核，则需要将该IP核及相关联文件删除
-## fifo.v说明
+### fifo.v说明
 * fifo设计参考:
   >https://blog.csdn.net/wuzhikaidetb/article/details/121136040
 * 需要修改的部分为WIDTH、DEPTH和一些与位宽有关的语句，其中WIDTH应与像素点位宽一致，DEPTH应大于等于图片像素点的个数。如下图所示：
   ![](https://github.com/nmdbxqmz/FPGA-based-image-processing/blob/main/images/verilog_fifo.png)
 * 将verilog_for_ip文件夹中fifo.v直接添加到工程中即可，如果之前为该工程配置了fifo核，则需要将该IP核删除
+
+## 工程输出结果说明
+* 该工程使用lcd来显示输出结果，lcd上会显示两张图像，左边的一张为输入的原始图像，右边的一张为经过处理后的图像，以下为canny和sobel的输出结果展示:
   
